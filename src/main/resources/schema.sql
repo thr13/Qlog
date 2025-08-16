@@ -19,7 +19,7 @@ CREATE TABLE profiles
     gender   ENUM("M", "F") NULL,
     name     VARCHAR(30) NULL,
     PRIMARY KEY (id),
-    CONSTRAINT FK_users_TO_profile FOREIGN KEY (user_id) REFERENCES users (id)
+    CONSTRAINT FK_users_TO_profiles FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 -- 카테고리
@@ -42,7 +42,7 @@ CREATE TABLE posts
     created_at DATETIME    NOT NULL DEFAULT NOW(),
     updated_at DATETIME    NOT NULL DEFAULT NOW() ON UPDATE NOW(),
     PRIMARY KEY (id),
-    CONSTRAINT FK_profile_TO_posts FOREIGN KEY (profile_id) REFERENCES profile (id)
+    CONSTRAINT FK_profiles_TO_posts FOREIGN KEY (profile_id) REFERENCES profiles (id)
 );
 
 -- 댓글
@@ -57,7 +57,7 @@ CREATE TABLE comments
     updated_at DATETIME NOT NULL DEFAULT NOW() ON UPDATE NOW(),
     PRIMARY KEY (id),
     CONSTRAINT FK_posts_TO_comments FOREIGN KEY (post_id) REFERENCES posts (id),
-    CONSTRAINT FK_profile_TO_comments FOREIGN KEY (profile_id) REFERENCES profile (id)
+    CONSTRAINT FK_profiles_TO_comments FOREIGN KEY (profile_id) REFERENCES profiles (id)
 );
 
 -- 파일
@@ -92,7 +92,7 @@ CREATE TABLE post_like
     profile_id BIGINT UNSIGNED NOT NULL,
     post_id    BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (profile_id, post_id),
-    CONSTRAINT FK_profile_TO_post_like FOREIGN KEY (profile_id) REFERENCES profile (id),
+    CONSTRAINT FK_profiles_TO_post_like FOREIGN KEY (profile_id) REFERENCES profiles (id),
     CONSTRAINT FK_posts_TO_post_like FOREIGN KEY (post_id) REFERENCES posts (id)
 );
 
@@ -102,6 +102,6 @@ CREATE TABLE comment_like
     profile_id BIGINT UNSIGNED NOT NULL,
     comment_id BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (profile_id, comment_id),
-    CONSTRAINT FK_profile_TO_comment_like FOREIGN KEY (profile_id) REFERENCES profile (id),
+    CONSTRAINT FK_profiles_TO_comment_like FOREIGN KEY (profile_id) REFERENCES profiles (id),
     CONSTRAINT FK_comments_TO_comment_like FOREIGN KEY (comment_id) REFERENCES comments (id)
 );
