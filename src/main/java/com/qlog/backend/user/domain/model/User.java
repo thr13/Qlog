@@ -23,10 +23,14 @@ public class User {
     private String password; //비밀번호
 
     @Column(nullable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now(); //생성일
+    private LocalDateTime createdAt; //생성일
 
     @Column(nullable = false)
     private boolean isAdmin; //관리자여부
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status; //계정상태
 
     @OneToOne(mappedBy = "user")
     private Profile profile; //1:1 필수관계(관계의 주인은 Profile)
@@ -38,9 +42,27 @@ public class User {
         this.email = email;
         this.password = password;
         this.isAdmin = false;
+        this.createdAt = LocalDateTime.now();
+        this.status = UserStatus.ACTIVE;
     }
 
     protected void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public void promoteAdmin() {
+        this.isAdmin = true;
+    }
+
+    public void demoteAdmin() {
+        this.isAdmin = false;
+    }
+
+    public void withdraw() {
+        this.status = UserStatus.WITHDRAW;
+    }
+
+    public void dormant() {
+        this.status = UserStatus.DORMANT;
     }
 }
