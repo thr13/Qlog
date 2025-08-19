@@ -15,9 +15,9 @@ CREATE TABLE profiles
 (
     id       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id  BINARY(16) NOT NULL UNIQUE,
-    nickname VARCHAR(255) NULL UNIQUE,
-    gender   ENUM('M', 'F') NULL,
-    name     VARCHAR(30) NULL,
+    nickname VARCHAR(255) NOT NULL UNIQUE,
+    gender   ENUM('M', 'F') NOT NULL,
+    name     VARCHAR(30) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_users_TO_profiles FOREIGN KEY (user_id) REFERENCES users (id)
 );
