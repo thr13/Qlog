@@ -1,7 +1,13 @@
 package com.qlog.backend.user.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -9,11 +15,13 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "BINARY(16)")
+    @UuidGenerator
+    @JdbcTypeCode(SqlTypes.BINARY) //자바의 UUID 를 DB 의 BINARY 타입으로 변환시켜줌
+    @Column(name = "id", columnDefinition = "BINARY(16)")
     private UUID id; //사용자 ID
 
     @Column(nullable = false, unique = true)
@@ -22,28 +30,23 @@ public class User {
     @Column(nullable = false)
     private String password; //비밀번호
 
-    @Column(nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt; //생성일
 
-    @Column(nullable = false)
-    private boolean isAdmin; //관리자여부
+    @Column(name = "is_admin", nullable = false)
+    private boolean isAdmin = false; //관리자여부
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserStatus status; //계정상태
+    private UserStatus status = UserStatus.ACTIVE;; //계정상태
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile; //1:1 필수관계(관계의 주인은 Profile)
-
-    public User() {
-    }
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.isAdmin = false;
-        this.createdAt = LocalDateTime.now();
-        this.status = UserStatus.ACTIVE;
     }
 
     protected void setProfile(Profile profile) {
