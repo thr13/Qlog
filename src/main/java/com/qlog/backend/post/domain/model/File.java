@@ -1,13 +1,18 @@
 package com.qlog.backend.post.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "files")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class File {
 
     @Id
@@ -31,16 +36,15 @@ public class File {
     private String type; //파일 타입(확장자)
 
     @Column(nullable = false)
-    private boolean isDeleted; //삭제 여부
+    private boolean isDeleted = false; //삭제 여부
 
-    @Column(nullable = false)
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt; //생성일
 
+    @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt; //수정일
-
-    public File() {
-    }
 
     public File(Post post, String name, String path, Long size, String type) {
         this.post = post;
@@ -48,14 +52,10 @@ public class File {
         this.path = path;
         this.size = size;
         this.type = type;
-        this.isDeleted = false;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
-
-    public void deleteFile() {
+    public void delete() {
         this.isDeleted = true;
-        this.updatedAt = LocalDateTime.now();
     }
+
 }
