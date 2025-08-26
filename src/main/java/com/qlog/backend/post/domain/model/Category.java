@@ -1,7 +1,9 @@
 package com.qlog.backend.post.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +11,7 @@ import java.util.Set;
 @Getter
 @Entity
 @Table(name = "categories")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 
     @Id
@@ -21,14 +24,11 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private Set<Post> posts = new HashSet<>(); //Post 테이블과 N:M 관계
 
-    public Category() {
-    }
-
     public Category(String name) {
         this.name = name;
     }
 
-    public void changeCategoryName(String name) {
+    public void changeName(String name) {
         this.name = name;
     }
 }
