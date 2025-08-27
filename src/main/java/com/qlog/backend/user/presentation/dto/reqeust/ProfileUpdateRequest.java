@@ -8,4 +8,7 @@ public class ProfileUpdateRequest {
 
     @NotBlank
     private String nickname;
+
+    @NotBlank
+    private String name;
 }

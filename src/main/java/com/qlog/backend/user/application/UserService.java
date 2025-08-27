@@ -4,10 +4,13 @@ import com.qlog.backend.user.domain.model.Profile;
 import com.qlog.backend.user.domain.model.User;
 import com.qlog.backend.user.domain.repository.ProfileRepository;
 import com.qlog.backend.user.domain.repository.UserRepository;
+import com.qlog.backend.user.exception.DuplicateEmailException;
 import com.qlog.backend.user.exception.NotFoundUserException;
 import com.qlog.backend.user.presentation.dto.reqeust.UserSignUpRequest;
 import com.qlog.backend.user.presentation.dto.response.UserResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,24 +18,28 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
-
-    public UserService(UserRepository userRepository, ProfileRepository profileRepository) {
-        this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     //회원 가입
     @Transactional
     public UserResponse signUp(UserSignUpRequest requestDto) {
-        User user = new User(requestDto.getEmail(), requestDto.getPassword());
+        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+            throw new DuplicateEmailException("이미 사용 중인 이메일입니다.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        User user = new User(requestDto.getEmail(), encodedPassword);
         Profile profile = new Profile(requestDto.getNickname(), requestDto.getGender(), requestDto.getName());
         profile.setUser(user);
+
         profileRepository.save(profile);
         userRepository.save(user);
+
         return UserResponse.from(user);
     }
 
@@ -76,7 +83,8 @@ public class UserService {
 
     private User findUser(UUID userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundUserException("해당 회원을 찾을 수 없습니다")
+                () -> new NotFoundUserException(userId + " 해당 회원을 찾을 수 없습니다")
         );
     }
+
 }
