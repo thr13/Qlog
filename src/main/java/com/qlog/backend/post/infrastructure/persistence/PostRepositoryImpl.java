@@ -1,6 +1,7 @@
-package com.qlog.backend.post.domain.repository;
+package com.qlog.backend.post.infrastructure.persistence;
 
 import com.qlog.backend.post.domain.model.Post;
+import com.qlog.backend.post.domain.repository.PostQueryRepository;
 import com.qlog.backend.post.presentation.dto.request.PostSearchRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
