@@ -1,5 +1,6 @@
 package com.qlog.backend.post.presentation;
 
+import com.qlog.backend.post.application.LikeService;
 import com.qlog.backend.post.application.PostService;
 import com.qlog.backend.post.presentation.dto.request.PostCreateRequest;
 import com.qlog.backend.post.presentation.dto.request.PostUpdateRequest;
@@ -20,6 +21,7 @@ import java.net.URI;
 public class PostController {
 
     private final PostService postService;
+    private final LikeService likeService;
 
     /**
      * 게시글 생성 API
@@ -63,7 +65,8 @@ public class PostController {
 
     /**
      * 게시글에 달린 댓글 조회 API
-     * @param postId 게시글 ID
+     *
+     * @param postId   게시글 ID
      * @param pageable 페이징 정보
      * @return 200 OK, 페이징 처리된 CommentResponse 객체
      */
@@ -99,6 +102,32 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 게시글 좋아요 API
+     *
+     * @param postId 게시글 ID
+     * @return 200 OK
+     */
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Void> likePost(@PathVariable Long postId) {
+        likeService.likePost(postId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 게시글 좋아요 취소 API
+     *
+     * @param postId 게시글 ID
+     * @return 204 NoContent
+     */
+    @DeleteMapping("/{postId}/like")
+    public ResponseEntity<Void> unlikePost(@PathVariable Long postId) {
+        likeService.unlikePost(postId);
 
         return ResponseEntity.noContent().build();
     }
