@@ -20,26 +20,22 @@ public class ProfileController {
 
     /**
      * 로그인한 사용자 자신의 프로필 조회
-     * @param userDetails 현재 인증된 사용자 정보
      * @return 자신의 프로필 정보
      */
     @GetMapping("/me")
-    public ResponseEntity<ProfileResponse> getMyProfile(@AuthenticationPrincipal SecurityUser userDetails) {
-        ProfileResponse response = profileService.getMyProfile(userDetails);
+    public ResponseEntity<ProfileResponse> getMyProfile() {
+        ProfileResponse response = profileService.getMyProfile();
         return ResponseEntity.ok(response);
     }
 
     /**
      * 로그인한 사용자 자신의 프로필 수정
-     * @param userDetails 현재 인증된 사용자 정보
      * @param requestDto 수정 닉네임, 이름
      * @return 수정된 프로필 정보
      */
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMyProfile(
-            @AuthenticationPrincipal SecurityUser userDetails,
-            @RequestBody ProfileUpdateRequest requestDto) {
-        profileService.updateProfile(userDetails, requestDto);
+    public ResponseEntity<Void> updateMyProfile(@RequestBody ProfileUpdateRequest requestDto) {
+        profileService.updateProfile(requestDto);
         return ResponseEntity.ok().build();
     }
 

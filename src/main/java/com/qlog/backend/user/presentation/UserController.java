@@ -1,13 +1,11 @@
 package com.qlog.backend.user.presentation;
 
-import com.qlog.backend.global.security.SecurityUser;
+import com.qlog.backend.global.security.SecurityUtil;
 import com.qlog.backend.user.application.UserService;
 import com.qlog.backend.user.presentation.dto.reqeust.UserSignUpRequest;
 import com.qlog.backend.user.presentation.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -45,12 +43,11 @@ public class UserController {
 
     /**
      * 회원 탈퇴 API
-     * @param userDetails 현재 인증된 사용자 정보
      * @return 200
      */
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withdrawMyAccount(@AuthenticationPrincipal SecurityUser userDetails) {
-        UUID userId = userDetails.getUser().getId();
+    public ResponseEntity<Void> withdrawMyAccount() {
+        UUID userId = SecurityUtil.getCurrentUserId();
         userService.withdrawUser(userId);
         return ResponseEntity.ok().build();
     }
