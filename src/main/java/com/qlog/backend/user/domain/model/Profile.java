@@ -26,12 +26,10 @@ public class Profile {
     private User user; //1:1 필수관계 (관계의 주인은 Profile)
 
     @Column(unique = true, nullable = false)
-    @Setter
     private String nickname; //닉네임
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    @Setter
     private Gender gender; //성별
 
     @Column(length = 30, nullable = false)
@@ -52,15 +50,15 @@ public class Profile {
         this.name = name;
     }
 
-    //프로필 업데이트
-    public void updateProfile(String nickname, String name) {
-        this.nickname = nickname;
-        this.name = name;
-    }
-
     //닉네임 변경
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    //프로필 업데이트
+    public void update(String nickname, String name) {
+        this.nickname = nickname;
+        this.name = name;
     }
 
     //User 와 양방향 관계
