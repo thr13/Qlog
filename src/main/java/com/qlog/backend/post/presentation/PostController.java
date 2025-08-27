@@ -3,6 +3,7 @@ package com.qlog.backend.post.presentation;
 import com.qlog.backend.post.application.PostService;
 import com.qlog.backend.post.presentation.dto.request.PostCreateRequest;
 import com.qlog.backend.post.presentation.dto.request.PostUpdateRequest;
+import com.qlog.backend.post.presentation.dto.response.CommentResponse;
 import com.qlog.backend.post.presentation.dto.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,7 +51,7 @@ public class PostController {
     /**
      * 게시글 조회 API
      *
-     * @param postId 게시글 식별키
+     * @param postId 게시글 ID
      * @return 200 OK, PostResponse 객체
      */
     @GetMapping("/{postId}")
@@ -61,10 +62,25 @@ public class PostController {
     }
 
     /**
+     * 게시글에 달린 댓글 조회 API
+     * @param postId 게시글 ID
+     * @param pageable 페이징 정보
+     * @return 200 OK, 페이징 처리된 CommentResponse 객체
+     */
+    @GetMapping("/{postId}/comments")
+    public ResponseEntity<Page<CommentResponse>> getComments(
+            @PathVariable Long postId,
+            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
+        Page<CommentResponse> response = postService.getCommentsByPost(postId, pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * 게시글 수정 API
      *
-     * @param postId 게시글 식별키
-     * @param req   제목, 내용
+     * @param postId 게시글 ID
+     * @param req    제목, 내용
      * @return 200 OK
      */
     @PutMapping("/{postId}")
@@ -77,7 +93,7 @@ public class PostController {
     /**
      * 게시글 삭제 API
      *
-     * @param postId 게시글 식별키
+     * @param postId 게시글 ID
      * @return 204 No Content
      */
     @DeleteMapping("/{postId}")

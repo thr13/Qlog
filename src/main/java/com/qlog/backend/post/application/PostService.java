@@ -4,12 +4,14 @@ import com.qlog.backend.global.security.SecurityUtil;
 import com.qlog.backend.post.domain.model.Category;
 import com.qlog.backend.post.domain.model.Post;
 import com.qlog.backend.post.domain.repository.CategoryRepository;
+import com.qlog.backend.post.domain.repository.CommentRepository;
 import com.qlog.backend.post.domain.repository.PostRepository;
 import com.qlog.backend.post.exception.NotFoundCategoryException;
 import com.qlog.backend.post.exception.NotFoundPostException;
 import com.qlog.backend.post.presentation.dto.request.PostCreateRequest;
 import com.qlog.backend.post.presentation.dto.request.PostSearchRequest;
 import com.qlog.backend.post.presentation.dto.request.PostUpdateRequest;
+import com.qlog.backend.post.presentation.dto.response.CommentResponse;
 import com.qlog.backend.post.presentation.dto.response.PostResponse;
 import com.qlog.backend.user.domain.model.Profile;
 import com.qlog.backend.user.domain.model.User;
@@ -33,6 +35,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
@@ -74,6 +77,16 @@ public class PostService {
         search.setCategoryId(categoryId);
 
         return postRepository.searchPosts(search, pageable).map(PostResponse::from);
+    }
+
+    //게시글에 소속된 댓글 조회
+    @Transactional(readOnly = true)
+    public Page<CommentResponse> getCommentsByPost(Long postId, Pageable pageable) {
+        if (!postRepository.existsById(postId)) {
+            throw new NotFoundPostException(postId + " ID에 해당하는 게시글을 찾을 수 없습니다.");
+        }
+
+        return commentRepository.findByPost_Id(postId, pageable).map(CommentResponse::from);
     }
 
     //게시글 수정
