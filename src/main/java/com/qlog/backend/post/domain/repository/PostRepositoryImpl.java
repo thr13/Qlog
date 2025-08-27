@@ -49,7 +49,6 @@ public class PostRepositoryImpl implements PostQueryRepository {
                 )
                 .fetchOne();
         return PageableExecutionUtils.getPage(content, pageable, () -> totalCount);
-        ;
     }
 
     /**
