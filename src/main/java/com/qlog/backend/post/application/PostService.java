@@ -25,7 +25,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -38,11 +40,12 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+    private final FileService fileService;
 
 
     //게시글 작성
     @Transactional
-    public PostResponse createPost(PostCreateRequest req) {
+    public PostResponse createPost(PostCreateRequest req, List<MultipartFile> files) {
         UUID userId = SecurityUtil.getCurrentUserId();
         Profile profile = findProfileByUserId(userId);
         Category category = findCategoryById(req.getCategoryId());
@@ -50,7 +53,13 @@ public class PostService {
         Post post = new Post(profile, req.getTitle(), req.getContent());
         post.addCategory(category);
 
-        postRepository.save(post);
+        Post newPost = postRepository.save(post);
+
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                fileService.storeFile(file, newPost);
+            }
+        }
 
         return PostResponse.from(post);
     }

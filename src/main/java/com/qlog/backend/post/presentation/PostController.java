@@ -10,10 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,13 +28,16 @@ public class PostController {
 
     /**
      * 게시글 생성 API
-     *
-     * @param req 제목, 내용, 카테고리 식별키
+     * @param request 제목, 내용, 카테고리 ID
+     * @param files 첨부 파일
      * @return 201 CREATED, PostResponse 객체
      */
-    @PostMapping
-    public ResponseEntity<PostResponse> createPost(@RequestBody PostCreateRequest req) {
-        PostResponse response = postService.createPost(req);
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<PostResponse> createPost(
+            @RequestPart("request") PostCreateRequest request,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files)
+    {
+        PostResponse response = postService.createPost(request, files);
         URI location = URI.create("/api/posts/" + response.getPostId());
 
         return ResponseEntity.created(location).body(response);
