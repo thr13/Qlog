@@ -48,10 +48,10 @@ public class PostService {
     public PostResponse createPost(PostCreateRequest req, List<MultipartFile> files) {
         UUID userId = SecurityUtil.getCurrentUserId();
         Profile profile = findProfileByUserId(userId);
-        Category category = findCategoryById(req.getCategoryId());
+        List<Category> categories = categoryRepository.findAllById(req.getCategoryIds());
 
         Post post = new Post(profile, req.getTitle(), req.getContent());
-        post.addCategory(category);
+        categories.forEach(post::addCategory);
 
         Post newPost = postRepository.save(post);
 
