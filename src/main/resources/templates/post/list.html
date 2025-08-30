@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h1>게시글 목록</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="post : ${postList.content}">
+        <td th:text="${post.postId}">1</td>
+        <td>
+            <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}">게시글 제목</a>
+        </td>
+        <td th:text="${post.authorNickname}">작성자</td>
+        <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">0000-00-00</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="pagination" th:if="${postList.totalPages > 1}">
+    <a th:if="${postList.hasPrevious()}" th:href="@{/posts(page=${postList.number - 1})}">이전</a>
+
+    <span th:each="pageNumber : ${#numbers.sequence(0, postList.totalPages - 1)}">
+        <strong th:if="${pageNumber == postList.number}" th:text="${pageNumber + 1}">1</strong>
+        <a th:if="${pageNumber != postList.number}" th:href="@{/posts(page=${pageNumber})}" th:text="${pageNumber + 1}">2</a>
+    </span>
+
+    <a th:if="${postList.hasNext()}" th:href="@{/posts(page=${postList.number + 1})}">다음</a>
+</div>
+</body>
+</html>
