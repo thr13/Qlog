@@ -3,6 +3,7 @@ package com.qlog.backend.post.presentation;
 import com.qlog.backend.post.application.CategoryService;
 import com.qlog.backend.post.application.PostService;
 import com.qlog.backend.post.presentation.dto.request.CategoryCreateRequest;
+import com.qlog.backend.post.presentation.dto.request.CategoryUpdateRequest;
 import com.qlog.backend.post.presentation.dto.response.CategoryResponse;
 import com.qlog.backend.post.presentation.dto.response.PostResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class CategoryController {
 
     /**
      * 카테고리 생성 API
+     *
      * @param req 카테고리명
      * @return 201 CREATED, PostResponse(카테고리 ID, 카테고리명)
      */
@@ -37,6 +39,7 @@ public class CategoryController {
 
     /**
      * 카테고리 목록 조회 API
+     *
      * @return 200 OK, PostResponse(카테고리 ID, 카테고리명) 목록
      */
     @GetMapping
@@ -48,8 +51,9 @@ public class CategoryController {
 
     /**
      * 카테고리에 소속된 게시글 목록 조회 API
+     *
      * @param categoryId 카테고리 식별키
-     * @param pageable 페이지블 정보
+     * @param pageable   페이지블 정보
      * @return 200 OK, 페이징 처리된 PostResponse
      */
     @GetMapping("/{categoryId}/posts")
@@ -61,4 +65,30 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 카테고리 수정 API
+     *
+     * @param categoryId 카테고리 ID
+     * @param request 카테고리 이름
+     * @return 200 OK
+     */
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<Void> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryUpdateRequest request) {
+        categoryService.updateCategory(categoryId, request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 카테고리 삭제 API
+     *
+     * @param categoryId 카테고리 ID
+     * @return 204 NoContent
+     */
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
