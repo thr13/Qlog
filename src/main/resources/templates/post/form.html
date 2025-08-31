@@ -14,13 +14,11 @@
         <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
     </div>
     <div>
-        <label for="category">카테고리</label>
-        <select id="category" th:field="*{categoryId}">
-            <option th:each="category : ${categories}"
-                    th:value="${category.categoryId}"
-                    th:text="${category.name}">카테고리 선택
-            </option>
-        </select>
+        <label>카테고리</label>
+        <div th:each="category : ${categories}">
+            <input type="checkbox" th:field="*{categoryIds}" th:value="${category.categoryId}">
+            <label th:for="${#ids.prev('categoryIds')}" th:text="${category.name}">카테고리 이름</label>
+        </div>
     </div>
     <div>
         <label for="content">내용</label>

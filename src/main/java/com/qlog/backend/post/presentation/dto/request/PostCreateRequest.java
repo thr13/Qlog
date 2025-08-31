@@ -1,8 +1,10 @@
 package com.qlog.backend.post.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class PostCreateRequest {
@@ -12,6 +14,6 @@ public class PostCreateRequest {
     @NotBlank
     private String content;
 
-    @NotNull
-    private Long categoryId;
+    @NotEmpty
+    private List<Long> categoryIds;
 }
