@@ -3,6 +3,7 @@ package com.qlog.backend.post.presentation;
 import com.qlog.backend.post.application.CategoryService;
 import com.qlog.backend.post.application.PostService;
 import com.qlog.backend.post.presentation.dto.request.PostCreateRequest;
+import com.qlog.backend.post.presentation.dto.response.CommentResponse;
 import com.qlog.backend.post.presentation.dto.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,9 +48,12 @@ public class PostViewController {
      * @return resources/templates/post/detail.html
      */
     @GetMapping("/{postId}")
-    public String postDetail(@PathVariable Long postId, Model model) {
+    public String postDetail(@PathVariable Long postId, @PageableDefault(sort = "createdAt") Pageable pageable, Model model) {
         PostResponse post = postService.getPostById(postId);
+        Page<CommentResponse> comment = postService.getCommentsByPost(postId, pageable);
+
         model.addAttribute("post", post);
+        model.addAttribute("comment", comment);
 
         return "post/detail";
     }
