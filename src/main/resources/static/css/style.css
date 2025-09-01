@@ -28,3 +28,9 @@ th {
     font-weight: bold;
     color: #007bff;
 }
+
+.like-btn.liked {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
