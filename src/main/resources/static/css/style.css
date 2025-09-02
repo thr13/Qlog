@@ -34,3 +34,12 @@ th {
     color: white;
     font-weight: bold;
 }
+
+#signupForm div {
+    margin-bottom: 10px;
+}
+
+#signupForm label {
+    display: inline-block;
+    width: 100px;
+}
