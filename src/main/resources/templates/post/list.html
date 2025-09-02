@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <title>게시글 목록</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<header th:replace="~{fragments/header :: header}"></header>
 
 <h1>게시글 목록</h1>
 

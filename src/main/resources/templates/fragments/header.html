@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header th:fragment="header">
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <a th:href="@{/}">QLog</a>
+        </div>
+
+        <ul class="navbar-menu">
+            <li sec:authorize="isAnonymous()"><a th:href="@{/view/users/login}">로그인</a></li>
+            <li sec:authorize="isAnonymous()"><a th:href="@{/view/users/signup}">회원가입</a></li>
+            <li sec:authorize="isAuthenticated()"><a th:href="@{/posts/new}">글작성</a></li>
+            <li sec:authorize="isAuthenticated()"><a th:href="@{/api/profiles/me}">내정보</a></li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/api/users/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="logout-btn">로그아웃</button>
+                </form>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <span class="welcome-msg">환영합니다, <span sec:authentication="principal.user.profile.nickname">사용자</span>님</span>
+            </li>
+        </ul>
+    </nav>
+</header>
+</html>
