@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>게시글 작성 페이지</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 <h1>게시글 작성</h1>
 
-<form th:action="@{/api/posts}" method="post" th:object="${postCreateRequest}">
+<form th:action="@{/api/posts}" method="post" enctype="multipart/form-data">
     <div>
         <label for="title">제목</label>
-        <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+        <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
     </div>
     <div>
         <label>카테고리</label>
         <div th:each="category : ${categories}">
-            <input type="checkbox" th:field="*{categoryIds}" th:value="${category.categoryId}">
-            <label th:for="${#ids.prev('categoryIds')}" th:text="${category.name}">카테고리 이름</label>
+            <input type="checkbox" name="categoryIds" th:value="${category.categoryId}" th:id="${'category-' + category.categoryId}">
+            <label th:for="${'category-' + category.categoryId}" th:text="${category.name}">카테고리 이름</label>
         </div>
     </div>
     <div>
         <label for="content">내용</label>
-        <textarea id="content" th:field="*{content}" rows="10" placeholder="내용을 입력하세요"></textarea>
+        <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요"></textarea>
     </div>
+
+    <div>
+        <label for="files">파일 첨부</label>
+        <input type="file" id="files" name="files" multiple>
+    </div>
+
     <button type="submit">작성하기</button>
 </form>
 </body>
